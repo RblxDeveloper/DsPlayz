@@ -22,13 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let lastRedeemTime = 0; // Timestamp of the last redemption
 
     const validCodes = {
-        "winR$-qu85i4": "10",
-        "winR$-ab12cd": "15",
-        "winR$-ef34gh": "20",
-        "winR$-ij56kl": "5",
-        "winR$-mn78op": "30",
-        "winR$-qr90st": "25",
-        "winR$-uv12wx": "10",
+        "winRbx-qu85i7": "10",
+        "winRbx-ab12cd": "15",
+        "winRbx-ef34gh": "20",
+        "winRbx-ij56kl": "5",
+        "winRbx-mn78op": "30",
+        "winRbx-qr90st": "25",
+        "winRbx-uv12wx": "10",
     };
 
     redeemBtn.addEventListener("click", async function () {
