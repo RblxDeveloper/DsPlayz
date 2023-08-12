@@ -1,0 +1,181 @@
+/* Import Google font - Poppins */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #20244c;
+}
+
+.container {
+    position: relative;
+    max-width: 450px;
+    width: 100%;
+    background: #050c2d;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.container header {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+}
+
+.container .form {
+    margin-top: 30px;
+}
+
+.form .input-box {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form .input-box input {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    outline: none;
+    font-size: 1rem;
+    color: #475dbe;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0 15px;
+}
+
+.form button {
+    height: 45px;
+    width: 100%;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 30px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #172049;
+    border-radius: 8px;
+}
+
+.form button:hover {
+    background: #243270;
+}
+
+.form .input-box label {
+    color: #fff;
+}
+
+input::placeholder {
+    color: #252b60;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #293075;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: calc(100% + 10px);
+    /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #293075 transparent transparent transparent;
+}
+
+.loader {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    margin-top: 5px;
+    animation: rotation 1s linear infinite;
+  }
+
+  .loader2 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-left: 5px;
+    animation: rotation 1s linear infinite;
+  }
+
+  .tooltip a {
+    color: #5975f2;
+    text-decoration: none;
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Add these styles to your existing CSS */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
