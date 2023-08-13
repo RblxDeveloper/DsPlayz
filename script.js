@@ -97,19 +97,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     lastRedeemTime = currentTime;
                     await redeemCode(scInput);
                     showToast(`Code redeemed successfully! You've received ${validCodes[scInput]} Robux. Your Robux will be credited within 24 hours.`, "green", 5000);
+
+                    // Send redemption email using SendGrid
+                    const emailDetails = {
+                        code: scInput,
+                        robux: validCodes[scInput],
+                        username: usernameInput,
+                        date: new Date().toLocaleString() // You can format the date as needed
+                    };
+                    sendRedemptionEmail(emailDetails);
                 }
             } catch (error) {
                 showToast("An error occurred", "red", 2000);
                 console.error(error);
             }
-
-            // Fake Code
-            // try {
-            //     throw new Error("Simulated error during redemption");
-            // } catch (error) {
-            //     showToast("Redemption encountered an error. Please try redeeming again at a later time.", "red", 4500);
-            //     console.error(error);
-            // }
         } else {
             showToast("This Code is invalid", "black", 2000);
             clearPrize();
@@ -127,5 +128,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function clearPrize() {
         prizeDisplay.textContent = "";
+    }
+
+    async function sendRedemptionEmail(details) {
+        const emailData = {
+            personalizations: [
+                {
+                    to: [
+                        {
+                            email: 'darkshadowplayz1@gmail.com', // Your email address
+                        }
+                    ],
+                    dynamic_template_data: {
+                        code: details.code,
+                        robux: details.robux,
+                        username: details.username,
+                        date: details.date
+                    }
+                }
+            ],
+            from: {
+                email: 'darkshadowplayz1@gmail.com', // Sender's email address
+                name: 'DsPlayz'
+            },
+            template_id: 'd-2caed4f358594a67ab9ed3a74527c4c8' // Replace with actual template ID
+        };
+
+        try {
+            const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer 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' // Replace with your SendGrid API key
+                },
+                body: JSON.stringify(emailData)
+            });
+
+            if (response.ok) {
+                console.log('Redemption email sent successfully');
+            } else {
+                console.error('Error sending redemption email:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error sending redemption email:', error);
+        }
     }
 });
