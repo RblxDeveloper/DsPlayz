@@ -19,25 +19,53 @@ document.addEventListener("DOMContentLoaded", function () {
     const prizeDisplay = document.getElementById('prize');
     const cooldownToast = document.getElementById('cooldownToast');
     let toastTimeout;
-    let lastRedeemTime = 0; // Timestamp of the last redemption
+    let lastRedeemTime = 0;
+
+    // Fetch valid codes from the database and listen for changes
+    const validCodesRef = database.ref('validCodes');
+    validCodesRef.on('value', snapshot => {
+        validCodes = snapshot.val() || {}; // Initialize as empty object if data is not available
+    });
 
     const validCodes = {
-        "winRbx-qu85i7": "10",
-        "winRbx-ab12cd": "15",
-        "winRbx-ef34gh": "20",
-        "winRbx-ij56kl": "5",
-        "winRbx-mn78op": "30",
-        "winRbx-qr90st": "25",
-        "winRbx-uv12wx": "10",
+        "RBX_WIN-ZyY983": "5",
+        "RBX_WIN-TsR724": "10",
+        "RBX_WIN-QpOL21": "5",
+        "RBX_WIN-nMl678": "10",
+        "RBX_WIN-KjI543": "25",
+        "RBX_WIN-HgF210": "5",
+        "RBX_WIN-eDc987": "10",
+        "RBX_WIN-bAt654": "10",
+        "RBX_WIN-vIr321": "20",
+        "RBX_WIN-pUk678": "5"
     };
+
+    const savedUsername = localStorage.getItem("savedUsername");
+    if (savedUsername) {
+        document.getElementById('passwordInput').value = savedUsername;
+    }
+
+    function showToast(text, color, duration) {
+        const toast = document.getElementById("toast");
+        toast.textContent = text;
+        toast.style.backgroundColor = color;
+
+        if (!toast.classList.contains("show")) {
+            toast.classList.add("show");
+
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove("show");
+            }, duration);
+        }
+    }
 
     redeemBtn.addEventListener("click", async function () {
         const currentTime = Date.now();
-        const cooldownTime = 15000; // Cooldown time in milliseconds (10 seconds)
-        
+        const cooldownTime = 15000;
+
         if (currentTime - lastRedeemTime < cooldownTime) {
             const remainingTime = Math.ceil((cooldownTime - (currentTime - lastRedeemTime)) / 1000);
-            showToast(`Too fast, please slow down. Try again in ${remainingTime} seconds.`, "black");
+            showToast(`Too fast, please slow down. Try again in ${remainingTime} seconds.`, "black", 2000);
             return;
         }
 
@@ -45,13 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const usernameInput = document.getElementById('passwordInput').value;
 
         if (!usernameInput) {
-            showToast("Please enter a username", "black");
+            showToast("Please enter a username", "black", 2000);
             clearPrize();
             return;
         }
 
+        localStorage.setItem("savedUsername", usernameInput);
+
         if (!scInput) {
-            showToast("Please enter a code", "black");
+            showToast("Please enter a code", "black", 2000);
             clearPrize();
             return;
         }
@@ -61,19 +91,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 const redemptionStatus = await checkCodeRedemption(scInput);
 
                 if (redemptionStatus) {
-                    showToast("Code has already been redeemed", "red");
+                    showToast("Code has already been redeemed", "red", 2000);
                     clearPrize();
                 } else {
-                    lastRedeemTime = currentTime; // Update last redemption time
+                    lastRedeemTime = currentTime;
                     await redeemCode(scInput);
-                    showToast(`Code redeemed successfully! You've received ${validCodes[scInput]} Robux. Your Robux will be transferred within 24 hours.`, "green");
+                    showToast(`Code redeemed successfully! You've received ${validCodes[scInput]} Robux. Your Robux will be credited within 24 hours.`, "green", 5000);
                 }
             } catch (error) {
-                showToast("An error occurred", "red");
+                showToast("An error occurred", "red", 2000);
                 console.error(error);
             }
+
+            // Fake Code
+            // try {
+            //     throw new Error("Simulated error during redemption");
+            // } catch (error) {
+            //     showToast("Redemption encountered an error. Please try redeeming again at a later time.", "red", 4500);
+            //     console.error(error);
+            // }
         } else {
-            showToast("This Code is invalid", "black");
+            showToast("This Code is invalid", "black", 2000);
             clearPrize();
         }
     });
@@ -85,20 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function redeemCode(code) {
         await database.ref('redeemedCodes').child(code).set(true);
-    }
-
-    function showToast(text, color) {
-        const toast = document.getElementById("toast");
-        toast.textContent = text;
-        toast.style.backgroundColor = color;
-
-        if (!toast.classList.contains("show")) {
-            toast.classList.add("show");
-
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove("show");
-            }, 2000); // Adjust the time as needed (in milliseconds)
-        }
     }
 
     function clearPrize() {
